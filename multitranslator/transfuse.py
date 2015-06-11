@@ -1,0 +1,225 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import argparse
+
+from tabulate import tabulate_formats
+
+from multitranslator.transfusion import *
+from multitranslator.writers.write_utils import *
+from multitranslator.writers.standard_output_table import show_standard_output
+from multitranslator.writers.xml_output import xml_output
+from multitranslator.writers.json_output import json_output
+from multitranslator.writers.standard_individual_output_table import show_standard_output_individual
+from multitranslator.writers.raw_output import show_raw_output
+from multitranslator.writers.pdf_output import pdf_output
+
+def show_default_supported_languages():
+    """
+    List the languages provided by Transfusion
+
+    """
+    print "Default supported languages:"
+    show_formatted_list(sorted(get_default_supported_languages_with_codes()))
+    print "Recommended source language: English (en)"
+
+def get_supported_translators():
+    """
+    Return the default translators
+
+    :return: The translators provided by Transfusion
+    :rtype: List of Translator
+    """
+    return sorted([translator for translator in default_translators])
+
+def show_supported_translators():
+    """
+    List the default translators provided by Transfusion
+
+    """
+    print "Supported translators:"
+    show_formatted_list(get_supported_translators())
+
+def show_supported_table_formats():
+    """
+    List the default table formats provided by Tabulate
+
+    """
+    print "Supported table formats:"
+    show_formatted_list(tabulate_formats)
+
+def show_all_actions():
+    """
+    List the available actions using the option --show
+
+    """
+    for action_name, action in actions.iteritems():
+        if action_name is not "all":
+            action()
+            print ""
+
+def get_translators():
+    """
+    The args.translators value decide which translators are chosen.
+    If this option is not present, all the default translators are chosen.
+
+    :return: The translators required by the user
+    :rtype: List of Translator
+
+    """
+    translators = []
+    if(args.translators == None):
+        translators = default_translators.values()
+    else:
+        for translator_name in args.translators:
+            if translator_name in default_translators:
+                translators.append(default_translators[translator_name])
+    return translators
+
+def get_task_target_languages():
+    """
+    Obtain the required languages by the user using args.target_languages.
+    If this option is not present, all the default languages will be used.
+
+    :return: The language codes used to generate the TranslatorTask
+    :rtype: List of string
+
+    """
+    if(args.target_languages == None):
+        args.target_languages = default_supported_languages.values()
+        if args.source_language in args.target_languages:
+            args.target_languages.remove(args.source_language)
+    return args.target_languages
+
+def get_default_supported_languages_with_codes():
+    """
+    Obtain the name of the default languages followed by their codes
+
+    :return: The language names and language codes formatted to be printed
+    :rtype: List of string
+    """
+    return [lang + " (" + code + ")" for lang, code in default_supported_languages.iteritems()]
+
+def show_formatted_list(lis):
+    """
+    List a list of strings with the next format:
+        1 - Elem1
+        2 - Elem2
+        [...]
+       10 - Elem10
+        [...]
+      100 - Elem100
+
+    :param lis: The strings to be formatted
+    :type lis: List of string
+    """
+    for i,elem in enumerate(lis, 1):
+        print '{0:>5} {1} {2}'.format(i,'-',elem)
+
+def get_default_filename():
+    """
+    If the user doesn't choose a name to store a translation, the next filename is created:
+    dd-mm-yy_hh-mm_{term}_{source language}_{target languages}
+
+    :return: A filename that identifies the translation
+    :rtype: string
+    """
+    return get_time() + "_" + \
+           args.term + "_" + \
+           args.source_language + "_" + \
+           "-".join(args.target_languages)
+
+def output_functions():
+    """
+    Show or save the translation in the desired supports chosen by the user
+
+    """
+    default_filename = get_default_filename()
+    if args.raw_output:
+        show_raw_output(translations, args.raw_output, default_filename)
+    if args.standard:
+        show_standard_output(translations, args.standard, default_filename, args.time, args.time_decimals, args.table_format)
+    if args.standard_individual:
+        show_standard_output_individual(translations, args.standard_individual, default_filename, args.table_format)
+    if args.xml:
+        xml_output(translations, args.xml, default_filename)
+    if args.json:
+        json_output(translations, args.json, default_filename)
+    if args.pdf:
+        pdf_output(translations, args.pdf, default_filename)
+
+def unavailable_action():
+    """
+    Show a message displaying that the input action doesn't exist
+
+    """
+    print "Unavailable action. Please, select one of this:", actions.__str__()
+
+def get_action(name):
+    """
+    Obtain the action function that has this name
+
+    :param name: The name of the action
+    :type: string
+    :return: The function that matches name
+    :rtype: function
+
+    """
+    return actions.get(name, unavailable_action)
+
+def show_help():
+    """
+    Show additional information
+    The program ends after the help is displayed
+
+    """
+    if args.show in actions:
+        get_action(args.show)()
+    sys.exit(0)
+
+def init_parser():
+    actions = {
+    "translators" : show_supported_translators,
+    "languages" : show_default_supported_languages,
+    "table-formats": show_supported_table_formats,
+    "all" : show_all_actions,
+    }
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-t", "--term", type=str, required=False, default = "hello", help="text to be translated")
+    parser.add_argument("-sl", "--source-language", type=str, required=False, dest="source_language", default="en", help="source language where comes the term. By default is en (English)")
+    parser.add_argument("-tl", "--target-languages", type=str, nargs='+', required=False, dest="target_languages", help="target languages for the translations. If it is not set, all the default languages except the source language will be used")
+    parser.add_argument("-ti", "--time", required=False, action='store_true', help="show a new column with the time spent by the translators for -so")
+    parser.add_argument("-tr", "--translators", type=str, nargs='+', required=False, help="translators used for the translations. If it is not set, all the default translators will be used")
+    parser.add_argument("-so", "--standard", nargs='?', const="stdout", default=None, type=str, required=False, dest="standard", help="show the translations in a unique table")
+    parser.add_argument("-soi", "--standard-individual", nargs='?', const="stdout", default=None, type=str, required=False, dest="standard_individual", help="the translations are split by language in individual tables")
+    parser.add_argument("-j", "--json", nargs='?', const="stdout", default=None, type=str, required=False, dest="json", help="JSON output")
+    parser.add_argument("-x", "--xml", nargs='?', const="stdout", default=None, type=str, required=False, dest="xml", help="XML output")
+    parser.add_argument("-p", "--pdf", default=None, type=str, required=False, dest="pdf", help="PDF output. Mandatory filename")
+    parser.add_argument("-s", "--show", required=False, choices=actions.keys(), help="additional help for some available choices")
+    parser.add_argument("-ro", "--raw-output", nargs='?', const="stdout", default=None, type=str, required=False, dest="raw_output")
+    parser.add_argument("-td", "--time-decimals", nargs='?', const=3, default=16, type=int, required=False, dest="time_decimals", help="number of decimals for time used by -so")
+    parser.add_argument("-v", "--verbose", action='store_true', required=False, help="show information about the status of the translators using the error output")
+    parser.add_argument("-tf", "--table-format", required=False, choices=tabulate_formats, default='fancy_grid', type=str, dest="table_format", help="table format for the -so and -soi outputs. By default is fancy_grid")
+    parser.add_argument("-c", "--correct", action='store_true', required=False, help="activate he corrector")
+    parser.add_argument("-co", "--concurrent", action='store_true', required=False, help="activate the concurrency exectution of the translators")
+    parser.add_argument("-nt", "--num-threads", type=int, default=4, required=False, dest="threads", help="number of threads for the concurrent execution. By default is 4")
+
+    return parser.parse_args(), actions
+
+if __name__ == "__main__":
+    args, actions = init_parser()
+
+    if(args.show != None):
+        show_help()
+
+    transfusion = Transfusion(translators=get_translators(), verbose=args.verbose)
+
+    translator_task = TranslatorTask(args.term, args.source_language, get_task_target_languages())
+
+    if args.concurrent:
+        translations = transfusion.get_concurrent_translation(translator_task, args.threads, args.correct)
+    else:
+        translations = transfusion.get_translation(translator_task, args.correct)
+
+    output_functions()

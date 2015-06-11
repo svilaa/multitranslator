@@ -1,0 +1,6 @@
+[submodule "multitranslator/translators/dict_cc_module"]
+	path = multitranslator/translators/dict_cc_module
+	url = https://github.com/svilaa/dict.cc.py.git
+[submodule "multitranslator/translators/mstranslator_module"]
+	path = multitranslator/translators/mstranslator_module
+	url = https://github.com/svilaa/mstranslator.git

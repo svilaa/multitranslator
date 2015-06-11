@@ -1,0 +1,380 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import argparse
+import json
+from tabulate import tabulate
+import os
+import sys
+
+class Node:
+    """
+    Stores the sources and score of a term in a specific language
+
+    """
+    def __init__(self, term, source, language):
+        self.term = term
+        self.score = 0
+        self.sources = set()
+        self.add_source(source, language)
+
+    def add_source(self, source, language):
+        """
+        Link the source with this node and add the score related with the source and language
+        If the source exists, it is not added
+
+        :param source: The source that has this term
+        :type source: Source
+        :param language: The translation language code of the source that has this term
+        :type language: string
+
+        """
+        if source not in self.sources:
+            self.sources.add(source)
+            self.score += source.get_score(language)
+
+class TermNode:
+    """
+    Stores the information about a term and all the nodes (translations) related with this
+
+    """
+    def __init__(self, term, languages):
+        """
+        :param term: The universal identifier of a term independently of the language
+        :type term: string
+        :param languages: The list of language codes that this term supports
+        :type languages: List of string
+
+        """
+        self.term = term
+        self.nodes = self._init_nodes(languages)
+
+    def _init_nodes(self, languages):
+        nodes = {}
+        for language in languages:
+            nodes[language] = []
+        return nodes
+
+    def add_translation(self, language, translation, source):
+        """
+        Add the translation found by source in a specific language
+
+        :param language: The language code of the translation
+        :type language: string
+        :param translation: The translation of the current term
+        :type translation: string
+        :param source: The source that generates this translations
+        :type source: Source
+
+        """
+        current_node = self.nodes[language]
+        exists = False
+        for node in current_node:
+            if translation == node.term:
+                node.add_source(source, language)
+                exists = True
+                break
+        if not exists:
+            current_node.append(Node(translation, source, language))
+
+class Source:
+    """
+    Identifies a translator or other services that provide translations.
+    Every Source has an score for each language to rate the translations
+
+    """
+    def __init__(self, name, scores):
+        """
+        :param name: The name of the source
+        :type name: string
+        :param scores: The punctuations for each language, including a default value
+        :type scores: dictionary
+
+        """
+        self.name = name
+        self.scores = scores
+
+    def get_score(self, language):
+        """
+        Obtain the score for this language, if it is not found, it is obtained the default value
+
+        :param language: The language code
+        :type language: string
+        :return: The score of this language
+        :rtype: int
+
+        """
+        if language in self.scores:
+            return self.scores[language]
+        else:
+            return self.scores["default"]
+
+class Grouper:
+    """
+    Manage
+
+    """
+    def __init__(self, configuration_filename=None, sort_by="sources", num_translations=3, verbose=False):
+        """
+        :param configuration_filename: The JSON file with the sources and their scores. If is None, all the scores are 1
+        :type configuration_filename: string
+        :param sort_by: The identifier used to sort the translations. Available identifiers: sources, score
+        :type sort_by: string
+        :param num_translations: Maximum number of translations displayed in the reports
+        :type num_translations: int
+        :param verbose: Show information about the current state of the execution
+        :type verbose: bool
+
+        """
+        self.sources = self._init_sources(configuration_filename)
+        self.terms = {}
+        self.sort_by = sort_by
+        self.num_translations = num_translations if num_translations >0  else 3
+        self.verbose = verbose
+
+    def _init_sources(self, configuration_filename):
+        sources = {}
+        if configuration_filename is None:
+            sources["default"] = Source("default", {"default":1})
+            return sources
+        else:
+            with open(configuration_filename) as configuration:
+                data = json.load(configuration, 'utf-8')
+                sources["default"] = Source("default", data["default"])
+                for name, source in data["sources"].iteritems():
+                    sources[name] = Source(name, source)
+                return sources
+
+    def get_source(self, name):
+        """
+        Obtain the Source with this name.
+        If it can't be found, the default source is returned
+
+        :param name: The name of the source
+        :type name: string
+        :return: The instance of the chosen Source
+        :rtype: Source
+
+        """
+        if name in self.sources:
+            return self.sources[name]
+        return self.sources["default"]
+
+    def add_directory(self, path):
+        """
+        Add all the JSON files with translations that this directory contains
+
+        :param path: The directory with JSON files
+        :type path: string
+
+        """
+        for filename in os.listdir(path):
+            if self.verbose:
+                print>>sys.stderr, "Working with", filename
+            self.add_file(os.path.join(path, filename))
+
+    def sort(self, nodes):
+        """
+        Sort the nodes using the sort_by criterion
+
+        :param nodes: The nodes to be sorted
+        :type: List of Node
+
+        """
+        if self.sort_by == "source":
+            nodes.sort(key=lambda n: len(n.sources), reverse=True)
+        elif self.sort_by == "score":
+            nodes.sort(key=lambda n: n.score, reverse=True)
+
+    def add_file(self, filename):
+        """
+        Load the translations found in the file
+
+        :param filename: The JSON file with translations
+        :type filename: string
+
+        """
+        with open(filename) as json_data:
+            data = json.load(json_data, 'utf-8')
+            term = data["task"]["term"]
+            if term not in self.terms:
+                self.terms[term] = TermNode(term, data["task"]["target_languages"])
+            term_node = self.terms[term]
+            for job in data["jobs"]:
+                for lang_trans in job["languages"]:
+                    language = lang_trans["code"]
+                    for translation in lang_trans["translations"]:
+                        if translation != u'':
+                            term_node.add_translation(language, translation, self.get_source(job["name"]))
+            for lang, nodes in term_node.nodes.iteritems():
+                self.sort(nodes)
+
+    def get_best_nodes(self, nodes):
+        """
+        Obtain the first num_translations nodes.
+        If there are less all the nodes are returned.
+        IF there aren't nodes, None is returned
+
+        :param nodes: The total amount of selected nodes
+        :type nodes: List of Node
+        :return: The first num_translations nodes
+        :rtype: List of Node
+
+        """
+        len_nodes = len(nodes)
+        if len_nodes > 0:
+            n_translations = min(len_nodes, self.num_translations)
+            return nodes[:n_translations]
+        return None
+
+    def print_results_information(self, filename=None):
+        """
+        Write a detailed report about the number of sources and the score of each term for every language
+        If filename is None, the report is displayed using the standard output
+
+        :param filename: The file used to write the report
+        :type filename: string or None
+
+        """
+        if filename is None:
+            f = sys.stdout
+        else:
+            f = open(filename+'.info', 'w')
+        for term_node in self.terms.values():
+            self._write_utf8_encoded(f, term_node.term)
+            for language, nodes in term_node.nodes.iteritems():
+                self._write_utf8_encoded(f, '\t'+language)
+                best_nodes = self.get_best_nodes(nodes)
+                if best_nodes is not None:
+                    for node in best_nodes:
+                        self._write_utf8_encoded(f, '\t\t'+node.term)
+                        self._write_utf8_encoded(f, '\t\t\t'+"No. sources: "+str(len(node.sources))+" Score: "+str(node.score))
+                else:
+                    self._write_utf8_encoded(f, '\t\t'+"No translations")
+            self._write_utf8_encoded(f, '')
+        if filename is not None:
+            f.close()
+
+
+    def _write_utf8_encoded(self, file_descriptor, content):
+        print >>file_descriptor, content.encode('utf-8')
+
+    def export_results(self, filename):
+        """
+        Write all the translations for each term and language in a TSV file
+
+        :param filename: The name of the file where the translations will be written
+        :type filename: string
+
+        """
+        with open(filename+'.tsv', 'w') as output:
+            for term_node in self.terms.values():
+                if self.verbose:
+                    print>>sys.stderr, "Working with", term_node.term
+                headers = [term_node.term] + term_node.nodes.keys()
+                table  = [['']*self.num_translations]
+                for nodes in term_node.nodes.values():
+                    best_nodes = self.get_best_nodes(nodes)
+                    translations = []
+                    if best_nodes is not None:
+                        translations.extend([translation.term for translation in best_nodes])
+                    translations.extend(['']*(self.num_translations-len(translations)))
+                    table.append(translations)
+                table = zip(*table)
+                self._write_utf8_encoded(output, tabulate(table, headers=headers, tablefmt='tsv'))
+                self._write_utf8_encoded(output, '')
+
+    def get_languages(self):
+        """
+        Obtain the languages used by the collected terms
+
+        :return: The languages managed by Grouper
+        :rtype: List of string
+
+        """
+        languages = set()
+        for term_node in self.terms.values():
+            for language in term_node.nodes.keys():
+                languages.add(language)
+        return languages
+
+    def export_individual_language(self, filename, language):
+        """
+        Write the translations in the TSV file for the specified language.
+        The translations are duplicated, the right column is used to correct the translations
+
+        :param filename: The name of the filename
+        :type filename: string
+        :param language: The language code
+        :type language: string
+
+        """
+        with open(filename+'_'+language+'.tsv', 'w') as output:
+            for term_node in self.terms.values():
+                if language in term_node.nodes:
+                    headers = [term_node.term] + [language]*2
+                    table = [['']*self.num_translations]
+                    translations = []
+                    best_nodes = self.get_best_nodes(term_node.nodes[language])
+                    if best_nodes is not None:
+                        translations.extend([translation.term for translation in best_nodes])
+                    translations.extend(['']*(self.num_translations-len(translations)))
+                    table.append(translations)
+                    table.append(translations)
+                    table = zip(*table)
+                    self._write_utf8_encoded(output, tabulate(table, headers=headers, tablefmt='tsv'))
+                    self._write_utf8_encoded(output, '')
+
+    def export_results_by_language(self, path):
+        """
+        Write a set of files with the translations inside path, each file contains only one language
+
+        :param path: The directory where the files will be written
+        :type path: string
+
+        """
+        languages = self.get_languages()
+        if not os.path.exists(path):
+            os.makedirs(path)
+        for language in languages:
+            if self.verbose:
+                print>>sys.stderr, "Working with", language
+            self.export_individual_language(os.path.join(path, "export"), language)
+
+def init_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--sort", required=False, choices=["source", "score"], default = "source", help="Criterion used to sort the translations")
+    parser.add_argument("-i", "--input", type=str, required=True, help="The JSON file or path (with JSON files) where are found the translations")
+    parser.add_argument("-c", "--conf-file", type=str, default=None, required=False, dest="conf_file", help="The settings about the sources and their scores")
+    parser.add_argument("-v", "--verbose", action='store_true', required=False, help="show information about the current state of the execution")
+    parser.add_argument("-nt", "--num-translations", type=int, default=3, required=False, dest="num_translations", help="Maximum number of translations for a same term displayed")
+    parser.add_argument("-o", "--output", type=str, required=False, help="Must be a file. Write all the translations for each term and language in the TSV file")
+    parser.add_argument("-ol", "--output-languages", dest="output_languages", required=False, help="Must be a path. Write a set of files with the translations inside the path, each file contains one language")
+    parser.add_argument("-r", "--results", nargs='?', const="stdout", type=str, required=False, help="Write a detailed report about the number of sources and the score of each term for every language")
+    args = parser.parse_args()
+
+    if not os.path.isdir(args.input) and not os.path.isfile(args.input):
+        parser.error("The input argument must be a file or a directory")
+        sys.exit()
+
+    return args
+
+if __name__ == "__main__":
+    args = init_parser()
+
+    g = Grouper(args.conf_file, sort_by=args.sort, num_translations=args.num_translations, verbose=args.verbose)
+
+    if os.path.isdir(args.input):
+        g.add_directory(args.input)
+    else:
+        g.add_file(args.input)
+
+    if args.output:
+        g.export_results(args.output)
+    if args.output_languages:
+        g.export_results_by_language(args.output_languages)
+
+    if args.results == "stdout":
+        g.print_results_information()
+    elif args.results is not None:
+        g.print_results_information(args.results)

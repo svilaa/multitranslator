@@ -1,0 +1,51 @@
+{
+    "default": {
+        "default": 50
+    },
+    "sources": {
+        "Google": {
+            "default": 60,
+            "es": 70
+        },
+        "Bing": {
+            "default": 60,
+            "es": 65
+        },
+        "Baidu": {
+            "default": 60
+        },
+        "Dict.cc": {
+            "default": 60
+        },
+        "Glosbe": {
+            "default": 60
+        },
+        "Hablaa": {
+            "default": 60
+        },
+        "MyMemory": {
+            "default": 60
+        },
+        "SDL": {
+            "default": 60
+        },
+        "Yandex": {
+            "default": 60
+        },
+        "Yandex dictionary": {
+            "default": 60
+        },
+        "WorldLingo": {
+            "default": 60
+        },
+        "iTranslate4": {
+            "default": 60
+        },
+        "SysLang": {
+            "default": 60
+        },
+        "OneHourTranslation": {
+            "default": 60
+        }
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "languages": {
+        "source_language": "en",
+        "target_languages": ["es", "fr", "ru"]
+    },
+    "valid_translations": {
+        "hello": {
+            "es": ["hola"],
+            "fr": ["bonjour", "ciao"],
+            "ru": ["привет"]
+        },
+        "dog": {
+            "es": ["perro"],
+            "fr": ["cane", "chien"],
+            "ru": ["собака"]
+        }
+    }
+}
