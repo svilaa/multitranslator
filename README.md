@@ -7,6 +7,13 @@ The main application is Transfusion, it provides the basic mechanism to obtain t
 To use Transfusion in a better way was created Transfuse, a friendly command line application for users and automatized scripts.
 It has a lot of options to configure source language, target language, translators, outputs and flags.
 
+<h3>Cloning the repository</h3>
+Execute the next command:
+
+git clone --recursive https://github.com/svilaa/multitranslator.git
+
+The recursive flag must be present or the submodules for dict.cc and bing don't be downloaded.
+
 <h3>Installation</h3>
 Inside multitranslator/translators there are two configuration files: keys.py and settings.py.
 In keys.py can be added the API keys provided by each translator service.
