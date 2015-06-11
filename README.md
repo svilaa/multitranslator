@@ -12,6 +12,8 @@ Inside multitranslator/translators there are two configuration files: keys.py an
 In keys.py can be added the API keys provided by each translator service.
 In settings.py can be configured which translators are activated and their initialization (some translators have additional configurations).
 
+This configuration is used by transfuse.py and transfusion if any translator is provided, that is, if multitranslator is used as a module, the keys and the translators can be configured independently in your own application, importing the desired translators and using these directly or with a Transfusion instance.
+
 After the configuration, execute python setup.py install at the repository root.
 
 Now you are able to import multitranslator as a module, and execute as scripts: transfuse.py, grouper.py and validator.py.
