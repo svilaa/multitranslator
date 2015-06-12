@@ -25,6 +25,15 @@ After the configuration, execute python setup.py install at the repository root.
 
 Now you are able to import multitranslator as a module, and execute as scripts: transfuse.py, grouper.py and validator.py.
 
+<h4>PyCurl</h4>
+It's recommended the installation of some required libraries for pycurl with:
+
+sudo apt-get install libcurl4-gnutls-dev librtmp-dev
+
+<h4>ReportLab</h4>
+Could be problems with this PDF library if during the installation the arial.ttf font is not found. Sadly, there isn't a generic solution that solves this issue.
+
+<h4>Concurrency</h4>
 With this basic configuration now you have access to all the functionalities except concurrent execution of the translation process. If you desire this optional feature, you must install [pathos](https://github.com/uqfoundation/pathos). The process to install this library could be difficult, so it's recommended to download the pathos repository and install it with python setup.py install, probably some libraries fail, in the external directory there are some .zip with libraries, they could be useful.
 
 <h3>Supported translators:</h3>
