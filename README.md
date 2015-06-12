@@ -22,7 +22,7 @@ In settings.py can be configured which translators are activated and their initi
 
 This configuration is used by transfuse.py and transfusion if any translator is provided, that is, if multitranslator is used as a module, the keys and the translators can be configured independently in your own application, importing the desired translators and using these directly or with a Transfusion instance.
 
-After the configuration, ```execute python setup.py install``` at the repository root.
+After the configuration, execute ```python setup.py install``` at the repository root.
 
 Now you are able to import multitranslator as a module, and execute as scripts: transfuse.py, grouper.py and validator.py.
 
@@ -36,6 +36,17 @@ Could be problems with this PDF library if during the installation the arial.ttf
 
 <h4>Concurrency</h4>
 With this basic configuration now you have access to all the functionalities except concurrent execution of the translation process. If you desire this optional feature, you must install [pathos](https://github.com/uqfoundation/pathos). The process to install this library could be difficult, so it's recommended to download the pathos repository and install it with python setup.py install, probably some libraries fail, in the external directory there are some .zip with libraries, they could be useful.
+
+<h3>How to use</h3>
+
+```import multitranslator```
+
+The available scripts are:
+* transfuse.py
+* grouper.py
+* validator.py
+
+The help can be displayed with the argument ```-h```
 
 <h3>Supported translators</h3>
 *	[Google](https://translate.google.com/) (Thanks to [zhuoqiang](https://bitbucket.org/zhuoqiang))
