@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-sys.path.insert(0,'..')
+
 from multitranslator.translators.translation_utils import languages, get_language_name
 
 formats = set(['tsv', 'html', 'psql', 'rst', 'latex'])
