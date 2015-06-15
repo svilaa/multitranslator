@@ -42,9 +42,9 @@ With this basic configuration now you have access to all the functionalities exc
 ```import multitranslator```
 
 The available scripts are:
-* transfuse.py
-* grouper.py
-* validator.py
+* transfuse
+* grouper
+* validator
 
 The help can be displayed with the argument ```-h```
 
@@ -63,3 +63,7 @@ The help can be displayed with the argument ```-h```
 *	[Glosbe](https://glosbe.com/)
 *	[Baidu](http://translate.baidu.com/)
 *	[iTranslate4](http://itranslate4.eu/)
+
+<h3>License</h3>
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/es/"><img alt="Licencia de Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/3.0/es/88x31.png" /></a><br />Esta obra está bajo una <a rel="license" href="http://creativecommons.org/licenses/by-nc-nd/3.0/es/">licencia de Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 España</a>.
