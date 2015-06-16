@@ -46,6 +46,15 @@ The available scripts are:
 * grouper
 * validator
 
+<h3>Documentation</h3>
+
+[Sphinx](http://sphinx-doc.org/) must be installed to generate the documentation.
+Go to the docs directory and execute:
+
+```make html```
+
+After the generation, the mainpage is located at docs/build/html/index.html
+
 The help can be displayed with the argument ```-h```
 
 <h3>Supported translators</h3>
