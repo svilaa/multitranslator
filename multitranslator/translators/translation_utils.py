@@ -61,11 +61,11 @@ class TranslatorJob:
     the list of translations as a dictionary and the time spend on these.
     The keys of the translation dictionary are language codes  and the values,
     lists with the translations, for example:
-    {
-        "es": ["hola", "saludo"],
-        "it": ["ciao"],
-        "fr": ["bonjour", "salut"]
-    }
+    | {
+    |     "es": ["hola", "saludo"],
+    |     "it": ["ciao"],
+    |     "fr": ["bonjour", "salut"]
+    | }
 
     """
     def __init__(self, translator_name, translations, execution_time):
@@ -88,6 +88,7 @@ class TranslatorJob:
 
         :return: The text representation of TranslatorJob
         :rtype: unicode string
+        
         """
         return "Translator: " + self.translator_name + \
         " Translations: " + "}; ".join([get_language_name(k)+": "+ "{" + ", ".join(v) for k,v in self.translations.items()]) + "}"  + \

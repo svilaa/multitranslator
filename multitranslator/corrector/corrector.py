@@ -5,24 +5,23 @@ from corrector_configuration import *
 void_string = u''
 
 class Corrector:
-    """
+    """__init__(self, filters=<default filters>, available_languages=<default languages>)
     Corrector class tries to remove or repair invalid translations using the assigned filters
+
+    :param filters: Filters used by the corrector
+    :type filters: dictionary, keys are strings, values are lists of AbstractFilter
+    :param available_languages: Languages supported by the corrector
+    :type available_languages: set of string
 
     """
     def __init__(self, filters=default_filters, available_languages=corrector_available_languages):
-        """
-        :param filters: Filters used by the corrector
-        :type filters: dictionary, keys are strings, values are lists of AbstractFilter
-        :param available_languages: Languages supported by the corrector
-        :type available_languages: set of string
-
-        """
         self.filters = filters
         self.available_languages = corrector_available_languages
 
     def apply_filters(self, term, filters_type):
         """
         Apply the filters of type filters_type
+        
         :param term: The term to be corrected
         :type term: string
         :param filters_type: The set of filters used

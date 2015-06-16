@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 setup(
     name='multitranslator',
     version='1.0',
-    license='',
+    license='Creative Commons Reconocimiento-NoComercial-SinObraDerivada 3.0 España',
     description='Translation tool that groups a set of translator APIs to obtain better translations. \
                  Additional tools are provided to correct, group and validate translations.',
     author='Sergi Vila Almenara',
@@ -25,7 +25,7 @@ setup(
         'dill==0.2.2',
         'reportlab==3.1.44'
     ],
-    scripts=["multitranslator/transfuse.py",
-             "multitranslator/validator.py",
-             "multitranslator/grouper.py"]
+    scripts=["multitranslator/transfuse",
+             "multitranslator/validator",
+             "multitranslator/grouper"]
 )

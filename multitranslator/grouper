@@ -343,14 +343,14 @@ class Grouper:
 
 def init_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-s", "--sort", required=False, choices=["source", "score"], default = "source", help="Criterion used to sort the translations")
+    parser.add_argument("-s", "--sort", required=False, choices=["source", "score"], default = "source", help="criterion used to sort the translations")
     parser.add_argument("-i", "--input", type=str, required=True, help="The JSON file or path (with JSON files) where are found the translations")
     parser.add_argument("-c", "--conf-file", type=str, default=None, required=False, dest="conf_file", help="The settings about the sources and their scores")
     parser.add_argument("-v", "--verbose", action='store_true', required=False, help="show information about the current state of the execution")
-    parser.add_argument("-nt", "--num-translations", type=int, default=3, required=False, dest="num_translations", help="Maximum number of translations for a same term displayed")
-    parser.add_argument("-o", "--output", type=str, required=False, help="Must be a file. Write all the translations for each term and language in the TSV file")
-    parser.add_argument("-ol", "--output-languages", dest="output_languages", required=False, help="Must be a path. Write a set of files with the translations inside the path, each file contains one language")
-    parser.add_argument("-r", "--results", nargs='?', const="stdout", type=str, required=False, help="Write a detailed report about the number of sources and the score of each term for every language")
+    parser.add_argument("-nt", "--num-translations", type=int, default=3, required=False, dest="num_translations", help="maximum number of translations for a same term displayed")
+    parser.add_argument("-o", "--output", type=str, required=False, help="must be a file. Write all the translations for each term and language in the TSV file")
+    parser.add_argument("-ol", "--output-languages", dest="output_languages", required=False, help="must be a path. Write a set of files with the translations inside the path, each file contains one language")
+    parser.add_argument("-r", "--results", nargs='?', const="stdout", type=str, required=False, help="write a detailed report about the number of sources and the score of each term for every language")
     args = parser.parse_args()
 
     if not os.path.isdir(args.input) and not os.path.isfile(args.input):

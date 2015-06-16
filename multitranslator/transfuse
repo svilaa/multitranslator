@@ -102,13 +102,13 @@ def get_default_supported_languages_with_codes():
 
 def show_formatted_list(lis):
     """
-    List a list of strings with the next format:
-        1 - Elem1
-        2 - Elem2
-        [...]
-       10 - Elem10
-        [...]
-      100 - Elem100
+    |  List a list of strings with the next format:
+    |  1 - Elem1
+    |  2 - Elem2
+    |  [...]
+    |  10 - Elem10
+    |  [...]
+    | 100 - Elem100
 
     :param lis: The strings to be formatted
     :type lis: List of string
@@ -201,7 +201,7 @@ def init_parser():
     parser.add_argument("-td", "--time-decimals", nargs='?', const=3, default=16, type=int, required=False, dest="time_decimals", help="number of decimals for time used by -so")
     parser.add_argument("-v", "--verbose", action='store_true', required=False, help="show information about the status of the translators using the error output")
     parser.add_argument("-tf", "--table-format", required=False, choices=tabulate_formats, default='fancy_grid', type=str, dest="table_format", help="table format for the -so and -soi outputs. By default is fancy_grid")
-    parser.add_argument("-c", "--correct", action='store_true', required=False, help="activate he corrector")
+    parser.add_argument("-c", "--correct", action='store_true', required=False, help="activate the corrector")
     parser.add_argument("-co", "--concurrent", action='store_true', required=False, help="activate the concurrency exectution of the translators")
     parser.add_argument("-nt", "--num-threads", type=int, default=4, required=False, dest="threads", help="number of threads for the concurrent execution. By default is 4")
 

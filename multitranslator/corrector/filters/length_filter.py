@@ -3,7 +3,7 @@ from sys import maxint
 from abstract_filter import AbstractFilter
 
 class LengthFilter(AbstractFilter):
-    """
+    """__init__(self, max_length=maxint)
     If the term is longer than max_length, the term is removed
 
     """

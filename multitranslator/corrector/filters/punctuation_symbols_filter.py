@@ -8,7 +8,7 @@ default_symbols = u"[.,;:\-\_\^¨\+\-\*\/=\?¿¡!|@#~¬\\\n\t%&\"<>€£$]"
 default_regular_exp = re.compile(default_symbols,re.UNICODE)
 
 class PunctuationSymbolsFilter(AbstractFilter):
-    """
+    """__init__(self, regular_exp=<default regular expression>)
     Remove punctuation symbols
 
     """

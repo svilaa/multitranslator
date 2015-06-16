@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+"""
+Transfusion is the main module of MultiTranslator, it is a set of functions used to 
+configure an launch translations, avoiding the headaches of the individual 
+implementations of the translators and how the data is managed.
+
+"""
 
 import copy
 try:
@@ -14,19 +20,17 @@ default_supported_languages = {'English': 'en', 'Spanish': 'es', 'French': 'fr',
             'Russian': 'ru', 'Arabic': 'ar', "German": 'de', "Italian": 'it', "Dutch": 'nl'}
 
 class Transfusion:
+    """__init__(self, translators=<List of translators>, verbose=False, corrector=<Corrector>)
+    
+    :param translators: A list with the desired translators
+    :type translators: List of Translator
+    :param verbose: Shows information about the state of the translations
+    :type verbose: bool
+    :param corrector: Corrector used to filter the translations
+    :type corrector: Corrector
 
+    """
     def __init__(self, translators=default_translators.values(), verbose=False, corrector=Corrector()):
-        """
-        Constructor
-
-        :param translators: A list with the desired translators
-        :type translators: List of Translator
-        :param verbose: Shows information about the state of the translations
-        :type verbose: bool
-        :param corrector: Corrector used to filter the translations
-        :type corrector: Corrector
-
-        """
         self.translators = translators
         self.verbose = verbose
         self.set_verbose(self.verbose)
@@ -80,7 +84,7 @@ class Transfusion:
         """
         Concurrent execution of the translation process. This function requires pathos.multiprocessing library
 
-        :param translatorTask:
+        :param translatorTask: The required information to perform the translation
         :type translatorTask: TranslatorTask
         :param threads: The number of threads. If is lower than 1, only 1 thread will work.
         :type threads: int

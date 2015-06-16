@@ -1,5 +1,5 @@
 """
-Some useful error codes to know the state of the translations
+Some useful error codes to know the state of the translations.
 
 """
 

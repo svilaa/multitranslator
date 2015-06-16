@@ -9,8 +9,8 @@ from error_codes import *
 
 class Syslang(Translator):
     """
-    Syslang/Frengly translator
-    The queries for this translator needs a delay of 3 seconds.
+    Syslang/Frengly translator.
+    The queries for this translator have a delay of 3 seconds.
 
     """
     supported_languages = {"zh": "zh-CN"}

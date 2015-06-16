@@ -6,7 +6,7 @@ from abstract_filter import AbstractFilter
 default_symbols = u'[\[\（\(].*?[\]\）\)]'
 
 class ParenthesisFilter(AbstractFilter):
-    """
+    """__init__(self, symbols=<default symbols>)
     Remove all the text between parenthesis and brackets
 
     """

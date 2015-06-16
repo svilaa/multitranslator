@@ -1,3 +1,15 @@
+"""
+| The list of translators, their keys and initializations must be added here.
+| The translators that can be used without a key are:
+|    Google
+|    MyMemory
+|    WorldLingo
+|    Hablaa
+|    Glosbe
+|    Dict.cc
+
+"""
+
 from google import Google
 from bing import Bing
 from mymemory import MyMemory
@@ -15,14 +27,9 @@ from baidu import Baidu
 
 from keys import *
 
-"""
-The list of translators, their keys and initializations must be added here
-
-"""
-
 default_translators = {
                "google": Google(),
-               #"mymemory": MyMemory(mymemory_key),
+               "mymemory": MyMemory(), # With the key more translations per month are available
                #"bing": Bing(bing_client_id, bing_client_secret),
                #"sdl": SDL(sdl_auth),
                "worldlingo": WorldLingo(worldlingo_key),

@@ -15,12 +15,12 @@ def get_write_file_descriptor(path, extension, default_path):
     :param extension: The file extension
     :type extension: string
     :param default_path:
-    :return: if path is stdout, return sys.stdout,
-             if path is default, return the file descriptor of default_path file
-             if path is a directory, return the description file of the path+default_path file,
+    :return: | if path is stdout, return sys.stdout
+             | if path is default, return the file descriptor of default_path file
+             | if path is a directory, return the description file of the path+default_path file,
                 and if the directory doesn't exists, it will be created
-             if path is a file, return the descriptor file of this file
-             if path is None, return None
+             | if path is a file, return the descriptor file of this file
+             | if path is None, return None
     :rtype: file descriptor
 
     """
