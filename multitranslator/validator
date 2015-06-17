@@ -230,8 +230,8 @@ class TranslationValidator:
 def init_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input", type=str, required=True, help="directory with the JSON files that contain the translations")
-    parser.add_argument("-tr", "--report-by-translator", nargs='?', const="stdout", type=str, required=False, dest="translator", help="do an analysis focused on the accuracy of the translators")
-    parser.add_argument("-te", "--report-by-term", type=str, nargs='?', const="stdout", required=False, dest="term", help="do an analysis focused on the success rate of the terms")
+    parser.add_argument("-tr", "--report-by-translator", nargs='?', const="stdout", type=str, required=False, dest="translator", metavar="REPORT_FILENAME", help="do an analysis focused on the accuracy of the translators")
+    parser.add_argument("-te", "--report-by-term", type=str, nargs='?', const="stdout", required=False, dest="term", metavar="REPORT_FILENAME", help="do an analysis focused on the success rate of the terms")
     parser.add_argument("-vf", "--validation-file", type=str, required=True, dest="validation_file", help="the JSON file with the required information for the analysis")
     parser.add_argument("-v", "--verbose", action='store_true', required=False, help="show information about the current state of the execution")
     parser.add_argument("-d", "--detailed", action='store_true', required=False, help="show more information about the statistics")
