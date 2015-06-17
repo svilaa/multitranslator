@@ -29,7 +29,7 @@ Now you are able to import multitranslator as a module, and execute as scripts: 
 <h4>PyCurl</h4>
 It's recommended the installation of some required libraries for pycurl with:
 
-```sudo apt-get install libcurl4-gnutls-dev librtmp-dev```
+```sudo apt-get install libcurl4-gnutls-dev librtmp-dev python-dev```
 
 <h4>ReportLab</h4>
 Could be problems with this PDF library if during the installation the arial.ttf font is not found. Sadly, there isn't a generic solution that solves this issue.
