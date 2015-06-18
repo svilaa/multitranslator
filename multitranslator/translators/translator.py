@@ -5,7 +5,7 @@ from translation_utils import *
 from collections import OrderedDict
 from error_codes import *
 
-class Translator:
+class Translator(object):
     """
     The abstract class Translator defines the methods that a translator must implement,
     every implementation of a translator needs to extends this class for a correct behavior.

@@ -16,19 +16,19 @@ Arguments
 |
 | -tr | --translators: List of names of the translators. The names are obtained using the default translators dictionary keys from settings.py. If this argument is not present, it's assumed all the default translators will be used.
 |
-| -so | --standard: Outputs the tasks in a table and the translators for each language in another.
+| -so | --standard: Output the tasks in a table and the translators for each language in another.
 |
-| -soi | --standard-individual: Outputs the tasks in a table and each language has a table, it's more readable in some cases.
+| -soi | --standard-individual: Output the tasks in a table and each language has a table, it's more readable in some cases.
 |
-| -j | --json: Outputs the JSON representation of the translation.
+| -j | --json: Output the JSON representation of the translation.
 |
-| -x | --xml: Outputs the XML representation of the translation.
+| -x | --xml: Output the XML representation of the translation.
 |
-| -p | --pdf: Outputs the PDF representation of the translation, it must require a parameter, that is the filename where the data will be stored.
+| -p | --pdf: Output the PDF representation of the translation, it must require a parameter, that is the filename where the data will be stored.
 |
-| -ro | --raw-output: Outputs the default Unicode representation of the translation.
+| -ro | --raw-output: Output the default Unicode representation of the translation.
 |
-| -s | --show: Offers specific help about a topic, the options are:
+| -s | --show: Offer specific help about a topic, the options are:
 |   •   translators: Shows the available translator names for -tr.
 |   •   languages: Shows the available language codes and its name for -sl and -tl.
 |   •   table-formats: Shows the available table formats provided by tabulate.
@@ -38,25 +38,25 @@ Arguments
 |
 | -c | --correct: Active the correction flag for Transfusion.
 |
-| -h | --help: Shows the help provided by argparse.
+| -h | --help: Show the help provided by argparse.
 |
 |
 | Special arguments compatible with -so | --standard:
 |
 | -ti | --time: Add a new column with the total time execution and the time for each translator.
 |
-| -td | --time-decimals: Changes the number of decimals for a best fit.
+| -td | --time-decimals: Change the number of decimals for a best fit.
 |
 | Special arguments compatible with -so | --standard and -soi | --standard-infividual:
 |
-| -tf | --table-format: Changes the table format used by tabulate. By default is "fancy_grid".
+| -tf | --table-format: Change the table format used by tabulate. By default is "fancy_grid".
 |
 |
 | Arguments for concurrency:
 |
 | -co | --concurrent: Active the concurrent execution of the translators.
 |
-| -nt | --num-threads: Sets the number of threads used for the concurrent execution.
+| -nt | --num-threads: Set the number of threads used for the concurrent execution.
 
 Examples
 --------

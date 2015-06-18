@@ -11,9 +11,9 @@ Arguments
 
 | -i | --input: Directory with the JSON files that contain the translations
 |
-| -tr | --report-by-translator: Does an analysis focused on the accuracy of the translators
+| -tr | --report-by-translator: Do an analysis focused on the accuracy of the translators
 |
-| -te | --report-by-term: Does an analysis focused on the success rate of the terms
+| -te | --report-by-term: Do an analysis focused on the success rate of the terms
 |
 | -vf | --validation-file: The JSON file with the required information for the analysis
 |

@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-class AbstractFilter:
+class AbstractFilter(object):
     """
     Abstract class that declares the apply method that every filter must implement
 
